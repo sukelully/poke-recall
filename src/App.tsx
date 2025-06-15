@@ -1,18 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './styles.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [score, setScore] = useState<number>(0);
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
-  const increaseCount = () => {
-    setCount(prev => prev + 1);
-  }
+  useEffect(() => {
+    const getPokemonData = async (): Promise<void> => {
+      setLoading(true);
+      try {
+        const res = await fetch('https://pokeapi.co/api/v2/pokemon/ditto', { mode: 'cors' });
+        const json = await res.json();
+        setData(json);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching pokemon data:', error);
+        setLoading(false);
+        setError(true);
+      }
+    };
+    getPokemonData();
+  }, []);
 
   return (
     <>
-      <div className="bg-teal-300 w-screen h-screen flex flex-col items-center justify-center gap-4">
-        <button className='bg-indigo-900 text-white font-semibold p-2 rounded-md' onClick={increaseCount}>Increase count</button>
-        <span>{count}</span>
+      <div className="flex h-screen w-screen flex-col items-center justify-center gap-4 bg-teal-300">
+        {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
       </div>
     </>
   );
