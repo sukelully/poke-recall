@@ -3,13 +3,12 @@ import type { PokeData } from './types';
 import Card from './components/Card';
 import './styles.css';
 
-
-
 function App() {
   // const [score, setScore] = useState<number>(0);
   const [pokeArr, setPokeArr] = useState<PokeData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const NUM_CARDS: number = 16;
 
   useEffect(() => {
     const getPokemonData = async (id: number): Promise<PokeData> => {
@@ -24,7 +23,7 @@ function App() {
     const fillPokeArr = async (): Promise<void> => {
       setLoading(true);
       try {
-        const promises = Array.from({ length: 10 }, (_, i) => getPokemonData(i + 1));
+        const promises = Array.from({ length: NUM_CARDS }, (_, i) => getPokemonData(i + 1));
         const results = await Promise.all(promises);
         setPokeArr(results);
       } catch (error) {
@@ -38,18 +37,19 @@ function App() {
   }, []);
 
   const getRandomPoke = (): number => {
-    return Math.floor(Math.random() * pokeArr.length);
+    return Math.floor(Math.random() * NUM_CARDS);
   };
 
   const randomPoke: number = getRandomPoke();
 
   return (
     <main className="w-max-4xl min-h-screen">
-      <div className="flex min-h-fit flex-col gap-4 bg-teal-300">
+      <div id="poke-grid" className="grid h-full grid-cols-4 gap-4">
         {loading && 'Catching Pokémon...'}
-        {!loading && !error && pokeArr[randomPoke] && (
-          <Card pokemon={pokeArr[randomPoke]} />
-        )}
+        {!loading &&
+          !error &&
+          pokeArr[randomPoke] &&
+          pokeArr.map((pokemon) => <Card key={pokemon.species.name} pokemon={pokemon} />)}
       </div>
     </main>
   );
