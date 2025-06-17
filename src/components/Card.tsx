@@ -10,12 +10,12 @@ function Card({ pokemon, onChange }: CardProps) {
   const [active, setActive] = useState<boolean>(pokemon.active);
 
   const handleClick = (): void => {
+    if (pokemon.active) console.log('ALREADY ACTIVE');
     setActive(true);
     const updatedPokemon = {
       ...pokemon,
       active: true
     }
-    console.log(updatedPokemon);
     onChange(updatedPokemon);
   };
 

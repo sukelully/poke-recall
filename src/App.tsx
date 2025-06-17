@@ -17,7 +17,7 @@ function App() {
       return {
         sprites: { front_default: json.sprites.front_default },
         species: { name: json.species.name, url: json.species.url },
-        active: false
+        active: false,
       };
     };
 
@@ -38,9 +38,19 @@ function App() {
   }, []);
 
   const handlePokemonUpdate = (updatedPokemon: PokeData): void => {
-    setPokeArr((prev) => 
-    prev.map((pokemon) =>
-    pokemon.species.name === updatedPokemon.species.name ? updatedPokemon : pokemon));
+    setPokeArr((prev) =>
+      prev.map((pokemon) =>
+        pokemon.species.name === updatedPokemon.species.name ? updatedPokemon : pokemon
+      )
+    );
+    shuffleArr();
+  };
+
+  const shuffleArr = (): void => {
+    console.log(pokeArr);
+    const shuffledArr: PokeData[] = [...pokeArr].sort(() => Math.random() - 0.5);
+    console.log(shuffledArr);
+    setPokeArr(shuffledArr);
   };
 
   return (
@@ -50,7 +60,9 @@ function App() {
         {!loading &&
           !error &&
           pokeArr[0] &&
-          pokeArr.map((pokemon) => <Card key={pokemon.species.name} pokemon={pokemon} onChange={handlePokemonUpdate} />)}
+          pokeArr.map((pokemon) => (
+            <Card key={pokemon.species.name} pokemon={pokemon} onChange={handlePokemonUpdate} />
+          ))}
       </div>
     </main>
   );
