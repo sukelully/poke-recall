@@ -4,7 +4,8 @@ import Card from './components/Card';
 import './styles.css';
 
 function App() {
-  // const [score, setScore] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+  const [hiScore, setHiScore] = useState<number>(0);
   const [pokeArr, setPokeArr] = useState<PokeData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -37,31 +38,62 @@ function App() {
     fillPokeArr();
   }, []);
 
+  // Shuffle on mount
+  useEffect(() => {
+    if (pokeArr.length > 0) {
+      const shuffled = shuffle(pokeArr);
+      setPokeArr(shuffled);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pokeArr.length]);
+
   const handlePokemonUpdate = (updatedPokemon: PokeData): void => {
-    setPokeArr((prev) =>
-      prev.map((pokemon) =>
+    setPokeArr((prev) => {
+      const updated = prev.map((pokemon) =>
         pokemon.species.name === updatedPokemon.species.name ? updatedPokemon : pokemon
-      )
-    );
-    shuffleArr();
+      );
+      return shuffle(updated);
+    });
+    setScore((prev) => prev + 1);
   };
 
-  const shuffleArr = (): void => {
-    console.log(pokeArr);
-    const shuffledArr: PokeData[] = [...pokeArr].sort(() => Math.random() - 0.5);
-    console.log(shuffledArr);
-    setPokeArr(shuffledArr);
+  const handleScoreReset = (): void => {
+    setScore(0);
+    setPokeArr((prev) =>
+      prev.map((pokemon) => ({
+        ...pokemon,
+        active: false,
+      })),
+    );
   };
+
+  function shuffle<T>(arr: T[]): T[] {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
 
   return (
     <main className="w-max-4xl min-h-screen">
+      <div id="score-container" className="flex justify-center gap-6 font-bold">
+        <span id="score">Score = {score}</span>
+        <span id="hi-score">Hi-score = {hiScore}</span>
+      </div>
       <div id="poke-grid" className="grid h-full grid-cols-4 gap-4">
         {loading && 'Catching Pokémon...'}
         {!loading &&
           !error &&
           pokeArr[0] &&
           pokeArr.map((pokemon) => (
-            <Card key={pokemon.species.name} pokemon={pokemon} onChange={handlePokemonUpdate} />
+            <Card
+              key={pokemon.species.name}
+              pokemon={pokemon}
+              setPokemon={handlePokemonUpdate}
+              onReset={handleScoreReset}
+            />
           ))}
       </div>
     </main>

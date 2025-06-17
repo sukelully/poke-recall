@@ -1,22 +1,19 @@
 import type { PokeData } from '../types';
-import { useState } from 'react';
 
 interface CardProps {
   pokemon: PokeData;
-  onChange: (updatedPokemon: PokeData) => void;
+  setPokemon: (updatedPokemon: PokeData) => void;
+  onReset: () => void;
 }
 
-function Card({ pokemon, onChange }: CardProps) {
-  const [active, setActive] = useState<boolean>(pokemon.active);
+function Card({ pokemon, setPokemon, onReset }: CardProps) {
 
   const handleClick = (): void => {
-    if (pokemon.active) console.log('ALREADY ACTIVE');
-    setActive(true);
-    const updatedPokemon = {
-      ...pokemon,
-      active: true
+    if (pokemon.active) {
+      onReset();
+      return;
     }
-    onChange(updatedPokemon);
+    setPokemon({...pokemon, active: true})
   };
 
   const capitalise = (word: string): string => {
@@ -25,8 +22,7 @@ function Card({ pokemon, onChange }: CardProps) {
 
   return (
     <button
-      className={`flex cursor-pointer flex-col items-center justify-center rounded-lg ${
-        active ? 'bg-amber-400' : 'bg-blue-800'
+      className={`flex cursor-pointer flex-col items-center justify-center rounded-lg ${pokemon.active ? 'bg-amber-400' : 'bg-blue-800'
       }`}
       onClick={handleClick}
     >
