@@ -54,7 +54,7 @@ function App() {
       );
       return shuffle(updated);
     });
-    setScore((prev) => prev + 1);
+    handleScoreUpdate();
   };
 
   const handleScoreReset = (): void => {
@@ -66,6 +66,14 @@ function App() {
       })),
     );
   };
+
+  const handleScoreUpdate = (): void => {
+    if (score >= hiScore) {
+      console.log('new hi score')
+      setHiScore(prev => prev + 1);
+    };
+    setScore(prev => prev + 1);
+  }
 
   function shuffle<T>(arr: T[]): T[] {
     const copy = [...arr];
