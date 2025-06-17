@@ -3,14 +3,20 @@ import { useState } from 'react';
 
 interface CardProps {
   pokemon: PokeData;
+  onChange: (updatedPokemon: PokeData) => void;
 }
 
-function Card({ pokemon }: CardProps) {
-  const [active, setActive] = useState<boolean>(false);
+function Card({ pokemon, onChange }: CardProps) {
+  const [active, setActive] = useState<boolean>(pokemon.active);
 
   const handleClick = (): void => {
-    console.log(pokemon.species.name);
-    setActive((prev) => !prev);
+    setActive(true);
+    const updatedPokemon = {
+      ...pokemon,
+      active: true
+    }
+    console.log(updatedPokemon);
+    onChange(updatedPokemon);
   };
 
   const capitalise = (word: string): string => {
@@ -26,6 +32,7 @@ function Card({ pokemon }: CardProps) {
     >
       <img src={pokemon.sprites.front_default} alt={pokemon.species.name} />
       <h1 className="font-semibold">{capitalise(pokemon.species.name)}</h1>
+      <span className='font-semibold'>{pokemon.active}</span>
     </button>
   );
 }

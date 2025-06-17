@@ -17,6 +17,7 @@ function App() {
       return {
         sprites: { front_default: json.sprites.front_default },
         species: { name: json.species.name, url: json.species.url },
+        active: false
       };
     };
 
@@ -36,11 +37,11 @@ function App() {
     fillPokeArr();
   }, []);
 
-  const getRandomPoke = (): number => {
-    return Math.floor(Math.random() * NUM_CARDS);
+  const handlePokemonUpdate = (updatedPokemon: PokeData): void => {
+    setPokeArr((prev) => 
+    prev.map((pokemon) =>
+    pokemon.species.name === updatedPokemon.species.name ? updatedPokemon : pokemon));
   };
-
-  const randomPoke: number = getRandomPoke();
 
   return (
     <main className="w-max-4xl min-h-screen">
@@ -48,8 +49,8 @@ function App() {
         {loading && 'Catching Pokémon...'}
         {!loading &&
           !error &&
-          pokeArr[randomPoke] &&
-          pokeArr.map((pokemon) => <Card key={pokemon.species.name} pokemon={pokemon} />)}
+          pokeArr[0] &&
+          pokeArr.map((pokemon) => <Card key={pokemon.species.name} pokemon={pokemon} onChange={handlePokemonUpdate} />)}
       </div>
     </main>
   );

@@ -6,4 +6,5 @@ export type PokeData = {
     name: string;
     url: string;
   };
+  active: boolean;
 };
