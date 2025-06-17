@@ -22,8 +22,7 @@ function Card({ pokemon, setPokemon, onReset }: CardProps) {
 
   return (
     <button
-      className={`flex cursor-pointer flex-col items-center justify-center rounded-lg ${pokemon.active ? 'bg-amber-400' : 'bg-blue-800'
-      }`}
+      className='flex cursor-pointer flex-col items-center justify-center rounded-lg bg-red-300 hover:bg-red-400 duration-200'
       onClick={handleClick}
     >
       <img src={pokemon.sprites.front_default} alt={pokemon.species.name} />

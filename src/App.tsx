@@ -63,17 +63,16 @@ function App() {
       prev.map((pokemon) => ({
         ...pokemon,
         active: false,
-      })),
+      }))
     );
   };
 
   const handleScoreUpdate = (): void => {
     if (score >= hiScore) {
-      console.log('new hi score')
-      setHiScore(prev => prev + 1);
-    };
-    setScore(prev => prev + 1);
-  }
+      setHiScore((prev) => prev + 1);
+    }
+    setScore((prev) => prev + 1);
+  };
 
   function shuffle<T>(arr: T[]): T[] {
     const copy = [...arr];
@@ -85,12 +84,14 @@ function App() {
   }
 
   return (
-    <main className="w-max-4xl min-h-screen">
-      <div id="score-container" className="flex justify-center gap-6 font-bold">
-        <span id="score">Score = {score}</span>
-        <span id="hi-score">Hi-score = {hiScore}</span>
-      </div>
-      <div id="poke-grid" className="grid h-full grid-cols-4 gap-4">
+    <main className="w-max-4xl m-8 min-h-screen">
+      <h1 className='font-bold text-4xl text-center pb-6'>PokéRecall</h1>
+      <div
+        id="poke-grid"
+        className={`grid h-full grid-cols-4 content-center gap-4 border-solid border-amber-200 ${
+          loading ? 'flex items-center justify-center' : ''
+        }`}
+      >
         {loading && 'Catching Pokémon...'}
         {!loading &&
           !error &&
@@ -103,6 +104,10 @@ function App() {
               onReset={handleScoreReset}
             />
           ))}
+      </div>
+      <div id="score-container" className="flex justify-center gap-6 font-bold pt-8">
+        <span id="score">Score = {score}</span>
+        <span id="hi-score">Hi-score = {hiScore}</span>
       </div>
     </main>
   );
